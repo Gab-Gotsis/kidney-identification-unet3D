@@ -9,7 +9,7 @@ https://docs.google.com/document/d/1YHhVStM9Fy6NThUfGkWJQmnP8DKJ-oFesjtKVkwK-2o/
 | Chin Chai | z3405715@unsw.edu.au |
 | Hanyang Xu | z5254111@unsw.edu.au |
 | Toran Shahi | z5342008@unsw.edu.au |
-| name | uni email |
+| Ji Hye Kim  | z5422963@unsw.edu.au |
 | name | uni email |
 
 # TOPIC HERE
