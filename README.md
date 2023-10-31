@@ -10,7 +10,7 @@ https://docs.google.com/document/d/1YHhVStM9Fy6NThUfGkWJQmnP8DKJ-oFesjtKVkwK-2o/
 | Hanyang Xu | z5254111@unsw.edu.au |
 | Toran Shahi | z5342008@unsw.edu.au |
 | Ji Hye Kim  | z5422963@unsw.edu.au |
-| name | uni email |
+| Gabriel Gotsis | z5362640@unsw.edu.au |
 
 # TOPIC HERE
 
