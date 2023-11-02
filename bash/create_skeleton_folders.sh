@@ -5,4 +5,9 @@
 
 mkdir -p tmp
 mkdir -p dataset
+mkdir -p chin/dataset
+mkdir -p toran/dataset
+mkdir -p hanyang/dataset
+mkdir -p gabriel/dataset
+mkdir -p hayden/dataset
 mkdir -p results

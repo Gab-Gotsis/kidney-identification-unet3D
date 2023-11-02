@@ -8,11 +8,21 @@ fi
 touch .gitignore
 
 
-# create folders or files to be ignored
+# folders or files to be ignored by git
 gitignore_text=$(echo ".gitignore"; 
 echo "*tmp/*"; 
 echo "*results/*"; 
 echo "*dataset/*"; 
+echo "chin/dataset/*"; 
+echo "toran/dataset/*"; 
+echo "hanyang/dataset/*"; 
+echo "gabriel/dataset/*"; 
 echo "*venv/*"; 
+echo "chin/.ipynb_checkpoints/*"; 
+echo "toran/.ipynb_checkpoints/*"; 
+echo "hanyang/.ipynb_checkpoints/*"; 
+echo "gabriel/.ipynb_checkpoints/*";
+echo "hayden/.ipynb_checkpoints/*";
+echo "bash/.ipynb_checkpoints/*";
 echo "*.ipynb_checkpoints/*";)
 echo "$gitignore_text" >> .gitignore
