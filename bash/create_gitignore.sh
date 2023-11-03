@@ -14,6 +14,7 @@ echo "*tmp/*";
 echo "*results/*"; 
 echo "*dataset/*"; 
 echo "chin/dataset/*"; 
+echo "chin/tmp/*"; 
 echo "toran/dataset/*"; 
 echo "hanyang/dataset/*"; 
 echo "gabriel/dataset/*"; 
