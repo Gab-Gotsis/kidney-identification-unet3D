@@ -19,11 +19,14 @@ echo "toran/dataset/*";
 echo "hanyang/dataset/*"; 
 echo "gabriel/dataset/*"; 
 echo "*venv/*"; 
-echo "chin/.ipynb_checkpoints/*"; 
+echo "chin/.ipynb_checkpoints/*";
 echo "toran/.ipynb_checkpoints/*"; 
 echo "hanyang/.ipynb_checkpoints/*"; 
 echo "gabriel/.ipynb_checkpoints/*";
 echo "hayden/.ipynb_checkpoints/*";
 echo "bash/.ipynb_checkpoints/*";
+echo ".project";
+echo ".metadata/*";
+echo "classes/dataset_utils/__pycache__/*";
 echo "*.ipynb_checkpoints/*";)
 echo "$gitignore_text" >> .gitignore
