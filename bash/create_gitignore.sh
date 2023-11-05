@@ -18,6 +18,7 @@ echo "chin/tmp/*";
 echo "toran/dataset/*"; 
 echo "hanyang/dataset/*"; 
 echo "gabriel/dataset/*"; 
+echo "hayden/dataset/*";
 echo "*venv/*"; 
 echo "chin/.ipynb_checkpoints/*";
 echo "toran/.ipynb_checkpoints/*"; 
