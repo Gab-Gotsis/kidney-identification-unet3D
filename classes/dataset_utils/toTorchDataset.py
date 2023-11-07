@@ -4,11 +4,12 @@ import nibabel as nib
 from sklearn.model_selection import train_test_split
 
 class ProcessedKit23TorchDataset(Dataset):
-    def __init__(self, dataset_dir: str="./dataset/affine_transformed", train_data:bool=True, test_size=0.25):
+    def __init__(self, dataset_dir: str="./dataset/affine_transformed", train_data:bool=True, test_size=0.25, transform=None):
 
         self.in_dataset_dir = dataset_dir
         self.case_dirs = []
         self.case_names = []
+        self.transform =transform
         all_cases = sorted(os.listdir(self.in_dataset_dir))
         train_cases, test_cases = train_test_split(all_cases, test_size=test_size, random_state=42)
         cases_to_load = test_cases
@@ -31,6 +32,10 @@ class ProcessedKit23TorchDataset(Dataset):
         case_dir = self.case_dirs[idx]
         case_img_path = '/'.join([case_dir, "imaging.nii.gz"])
         case_seg_path = '/'.join([case_dir, "segmentation.nii.gz"])
-        img_loader = nib.load(case_img_path).get_fdata()
-        seg_loader = nib.load(case_seg_path).get_fdata()
-        return img_loader, seg_loader
+        if self.transform:
+            img_loader = nib.load(case_img_path).get_fdata().double()[None]
+            seg_loader = nib.load(case_seg_path).get_fdata().double()[None]
+        else:
+            img_loader = nib.load(case_img_path).get_fdata()[None]
+            seg_loader = nib.load(case_seg_path).get_fdata()[None]
+            return img_loader, seg_loader

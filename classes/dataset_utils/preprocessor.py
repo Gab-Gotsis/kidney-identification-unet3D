@@ -45,8 +45,8 @@ class Preprocess():
             resampled_seg_loader = resample_img(seg_loader, target_affine=self.target_affine, fill_value=-1024, target_shape=self.target_shape, interpolation='nearest')
             if i == 0:
                 print("Output Affine : \n{}".format(resampled_img_loader.affine))
-            print("{}: 3D image shape {}".format(case_name, resampled_img_loader.shape))
-            print("{}: 3D seg shape {}".format(case_name, resampled_seg_loader.shape))
+            print("{}: 3D image from shape {} to shape {}".format(case_name, img_loader.shape, resampled_img_loader.shape))
+            print("{}: 3D seg from shape {} to shape {}".format(case_name, seg_loader.shape, resampled_seg_loader.shape))
             
             this_case_dir = os.path.join(self.out_dir, case_name)
             if not os.path.isdir(this_case_dir):
