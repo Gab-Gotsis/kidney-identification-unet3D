@@ -42,7 +42,7 @@ class Preprocess():
             img_loader = nib.load(case_img_path)
             seg_loader = nib.load(case_seg_path)
             resampled_img_loader = resample_img(img_loader, target_affine=self.target_affine, fill_value=-1024, target_shape=self.target_shape, interpolation='nearest')
-            resampled_seg_loader = resample_img(seg_loader, target_affine=self.target_affine, fill_value=-1024, target_shape=self.target_shape, interpolation='nearest')
+            resampled_seg_loader = resample_img(seg_loader, target_affine=self.target_affine, fill_value=0, target_shape=self.target_shape, interpolation='nearest')
             if i == 0:
                 print("Output Affine : \n{}".format(resampled_img_loader.affine))
             print("{}: 3D image from shape {} to shape {}".format(case_name, img_loader.shape, resampled_img_loader.shape))

@@ -5,7 +5,7 @@ import torch
 from classes.epoch_results import EpochResult
 class ProjectModelResnetConfig():
     
-    def __init__(self, model_depth:int =10, no_cude: bool= True):
+    def __init__(self, model_depth:int =10, no_cuda: bool= True, n_seg_classes:int =4):
         self.is_debug = True
         self.model_name = "resnet"
         # Option for model depth [10, 18, 34, 50, 101, 152, 200]
@@ -13,11 +13,11 @@ class ProjectModelResnetConfig():
         self.input_W = 232
         self.input_H = 232
         self.input_D = 128
-        self.no_cuda = no_cude
+        self.no_cuda = no_cuda
         self.max_epoch = 50
         self.batch_size = 1
         self.resnet_shortcut = 'B'
-        self.n_seg_classes = 4
+        self.n_seg_classes = n_seg_classes
         self.num_workers = 1
         self.pretrain_path = None
         self.phase_is_train = True
