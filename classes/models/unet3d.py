@@ -5,17 +5,6 @@ import torch.nn.functional as F
 
 class UNet3D(nn.Module):
     def __init__(self, n_channels, n_classes, width_multiplier=1, trilinear=True, use_ds_conv=False):
-        """A simple 3D Unet, adapted from a 2D Unet from https://github.com/milesial/Pytorch-UNet/tree/master/unet
-        Arguments:
-          n_channels = number of input channels; 3 for RGB, 1 for grayscale input
-          n_classes = number of output channels/classes
-          width_multiplier = how much 'wider' your UNet should be compared with a standard UNet
-                  default is 1;, meaning 32 -> 64 -> 128 -> 256 -> 512 -> 256 -> 128 -> 64 -> 32
-                  higher values increase the number of kernels pay layer, by that factor
-          trilinear = use trilinear interpolation to upsample; if false, 3D convtranspose layers will be used instead
-          use_ds_conv = if True, we use depthwise-separable convolutional layers. in my experience, this is of little help. This
-                  appears to be because with 3D data, the vast vast majority of GPU RAM is the input data/labels, not the params, so little
-                  VRAM is saved by using ds_conv, and yet performance suffers."""
         super(UNet3D, self).__init__()
         _channels = (32, 64, 128, 256, 512)
         self.n_channels = n_channels
@@ -50,8 +39,6 @@ class UNet3D(nn.Module):
         return logits
     
 class DoubleConv(nn.Module):
-    """(convolution => [BN] => ReLU) * 2"""
-
     def __init__(self, in_channels, out_channels, conv_type=nn.Conv3d, mid_channels=None):
         super().__init__()
         if not mid_channels:
@@ -70,8 +57,6 @@ class DoubleConv(nn.Module):
 
 
 class Down(nn.Module):
-    """Downscaling with maxpool then double conv"""
-
     def __init__(self, in_channels, out_channels, conv_type=nn.Conv3d):
         super().__init__()
         self.maxpool_conv = nn.Sequential(
@@ -84,8 +69,6 @@ class Down(nn.Module):
 
 
 class Up(nn.Module):
-    """Upscaling then double conv"""
-
     def __init__(self, in_channels, out_channels, trilinear=True):
         super().__init__()
 
@@ -100,7 +83,6 @@ class Up(nn.Module):
 
     def forward(self, x1, x2):
         x1 = self.up(x1)
-        # input is CHW
         diffY = x2.size()[2] - x1.size()[2]
         diffX = x2.size()[3] - x1.size()[3]
 
