@@ -69,44 +69,44 @@ def generate_model(opt:ProjectConfig):
                 num_seg_classes=opt.n_seg_classes)
     
     if not opt.no_cuda:
-        if len(opt.gpu_id) > 1:
+        if torch.cuda.is_available():
             model = model.cuda() 
-            model = nn.DataParallel(model, device_ids=opt.gpu_id)
-            net_dict = model.state_dict() 
-        else:
-            import os
-            os.environ["CUDA_VISIBLE_DEVICES"]=str(opt.gpu_id[0])
-            model = model.cuda() 
-            model = nn.DataParallel(model, device_ids=None)
-            net_dict = model.state_dict()
-    else:
-        net_dict = model.state_dict()
+            model = nn.DataParallel(model)
+            # net_dict = model.state_dict() 
+        # else:
+        #     import os
+        #     os.environ["CUDA_VISIBLE_DEVICES"]=str(opt.gpu_id[0])
+        #     model = model.cuda() 
+        #     model = nn.DataParallel(model, device_ids=None)
+        #     net_dict = model.state_dict()
+    # else:
+    #     net_dict = model.state_dict()
     
     # load pretrain
-    if opt.phase_is_train and opt.pretrain_path:
-        print ('loading pretrained model {}'.format(opt.pretrain_path))
-        pretrain = []
-        if torch.cuda.is_available():
-            pretrain = torch.load(opt.pretrain_path)
-        else:
-            pretrain = torch.load(opt.pretrain_path, map_location=torch.device('cpu'))
-        pretrain_dict = {k: v for k, v in pretrain['state_dict'].items() if k in net_dict.keys()}
+    # if opt.phase_is_train and opt.pretrain_path:
+    #     print ('loading pretrained model {}'.format(opt.pretrain_path))
+    #     pretrain = []
+    #     if torch.cuda.is_available():
+    #         pretrain = torch.load(opt.pretrain_path)
+    #     else:
+    #         pretrain = torch.load(opt.pretrain_path, map_location=torch.device('cpu'))
+    #     pretrain_dict = {k: v for k, v in pretrain['state_dict'].items() if k in net_dict.keys()}
          
-        net_dict.update(pretrain_dict)
-        model.load_state_dict(net_dict)
+    #     net_dict.update(pretrain_dict)
+    #     model.load_state_dict(net_dict)
 
-        new_parameters = [] 
-        for pname, p in model.named_parameters():
-            for layer_name in opt.new_layer_names:
-                if pname.find(layer_name) >= 0:
-                    new_parameters.append(p)
-                    break
+    #     new_parameters = [] 
+    #     for pname, p in model.named_parameters():
+    #         for layer_name in opt.new_layer_names:
+    #             if pname.find(layer_name) >= 0:
+    #                 new_parameters.append(p)
+    #                 break
 
-        new_parameters_id = list(map(id, new_parameters))
-        base_parameters = list(filter(lambda p: id(p) not in new_parameters_id, model.parameters()))
-        parameters = {'base_parameters': base_parameters, 
-                      'new_parameters': new_parameters}
+    #     new_parameters_id = list(map(id, new_parameters))
+    #     base_parameters = list(filter(lambda p: id(p) not in new_parameters_id, model.parameters()))
+    #     parameters = {'base_parameters': base_parameters, 
+    #                   'new_parameters': new_parameters}
 
-        return model, parameters
+    #     return model, parameters
 
     return model, model.parameters()

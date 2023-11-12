@@ -60,7 +60,7 @@ class ProjectModelResnetConfig():
             for model_key in net_dict.keys():
                 # the key has characteres 'module.' that causes layers arent matching, so these characters have to be stripped
                 c_key = k[7:]
-                if c_key == model_key:
+                if c_key == model_key or k == model_key:
                     pretrain_dict[model_key] = v
                     # print("Checkpoint Key: {:60s} model key: {:60s}  {}  {}".format(k, model_key, v.size(), type(v)))
                     has_match = True

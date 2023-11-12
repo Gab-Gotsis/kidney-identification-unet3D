@@ -18,6 +18,8 @@ echo "**/.ipynb_checkpoints/";
 echo "pretrainedModel/*";
 echo "chin/dataset/*"; 
 echo "chin/tmp/*";
+echo "chin/notebook_imgs/*";
+echo "training_checkpoints/*";
 echo "toran/dataset/*"; 
 echo "hanyang/dataset/*"; 
 echo "gabriel/dataset/*"; 
