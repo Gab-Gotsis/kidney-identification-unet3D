@@ -5,7 +5,7 @@ import torch
 from classes.epoch_results import EpochResult
 class ProjectModelResnetConfig():
     
-    def __init__(self, model_depth:int =10, no_cuda: bool= True, n_seg_classes:int =4):
+    def __init__(self, model_depth:int =10, no_cuda: bool= True, n_seg_classes:int =4, batch_size: int = 2, num_workers: int = 1):
         self.is_debug = True
         self.model_name = "resnet"
         # Option for model depth [10, 18, 34, 50, 101, 152, 200]
@@ -70,7 +70,7 @@ class ProjectModelResnetConfig():
         net_dict.update(pretrain_dict)
         self.nn_model.load_state_dict(net_dict)
     
-    def load_weight_from_epoch(self, model_epoch_pth: str):
+    def load_weight_from_epoch(self, model_epoch_pth: str, is_colab=False):
         if not self.nn_model:
             raise Exception("neural network model is not set")
         print(model_epoch_pth)
@@ -86,12 +86,3 @@ class ProjectModelResnetConfig():
         lr_list = checkpoint['lr_list']
         epoch_res = EpochResult(_epoch_list =ep_list, _loss_list=loss_list, _lr_list=lr_list)
         return checkpoint, epoch_res
-           
-    # epoch = checkpoint['epoch']
-    # loss = checkpoint['loss']
-        
-        
-        return 
-        
-
-        
