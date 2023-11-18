@@ -19,6 +19,7 @@ echo "pretrainedModel/*";
 echo "chin/dataset/*"; 
 echo "chin/tmp/*";
 echo "chin/notebook_imgs/*";
+echo "project/*";
 echo "training_checkpoints/*";
 echo "toran/dataset/*"; 
 echo "hanyang/dataset/*"; 
