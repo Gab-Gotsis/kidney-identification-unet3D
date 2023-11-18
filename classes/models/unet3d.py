@@ -4,7 +4,7 @@ import torch.nn.init as init
 import torch.nn.functional as F
 
 class UNet3D(nn.Module):
-    def __init__(self, n_channels, n_classes, width_multiplier=1, channel_selection: int = 0, double_conv_kernel_size:int =3):
+    def __init__(self, n_channels, n_classes, width_multiplier=1, channel_selection: int = 0, double_conv_kernel_size:int =3, is_upsampling = False):
         super(UNet3D, self).__init__()
         _channels = ()
         if channel_selection == 0:
@@ -17,18 +17,28 @@ class UNet3D(nn.Module):
         self.n_classes = n_classes
         self.channels = [int(c*width_multiplier) for c in _channels]
         self.convtype = nn.Conv3d
+        
+        self.is_upsampling = is_upsampling
 
         self.inc = DoubleConv(n_channels, self.channels[0], conv_type=self.convtype, kernel_size=double_conv_kernel_size)
         self.down1 = Down(self.channels[0], self.channels[1], conv_type=self.convtype)
         self.down2 = Down(self.channels[1], self.channels[2], conv_type=self.convtype)
         self.down3 = Down(self.channels[2], self.channels[3], conv_type=self.convtype)
         self.down4 = Down(self.channels[3], self.channels[4], conv_type=self.convtype)
-        self.up1 = Up(self.channels[4], self.channels[3])
-        self.up2 = Up(self.channels[3], self.channels[2])
-        self.up3 = Up(self.channels[2], self.channels[1])
-        self.up4 = Up(self.channels[1], self.channels[0])
+        
+        if (is_upsampling): 
+            self.up1 = Up(self.channels[4], self.channels[3] // 2, is_upsampling)
+            self.up2 = Up(self.channels[3], self.channels[2] // 2, is_upsampling)
+            self.up3 = Up(self.channels[2], self.channels[1] // 2, is_upsampling)
+            self.up4 = Up(self.channels[1], self.channels[0] // 2, is_upsampling)
+        else:
+            self.up1 = Up(self.channels[4], self.channels[3], trilinear)
+            self.up2 = Up(self.channels[3], self.channels[2], trilinear)
+            self.up3 = Up(self.channels[2], self.channels[1], trilinear)
+            self.up4 = Up(self.channels[1], self.channels[0], trilinear)
+        
         self.outc = OutConv(self.channels[0], n_classes)
-
+         
     def forward(self, x):
         x1 = self.inc(x)
         x2 = self.down1(x1)
@@ -88,10 +98,15 @@ class Down(nn.Module):
 
 
 class Up(nn.Module):
-    def __init__(self, in_channels, out_channels):
+    def __init__(self, in_channels, out_channels, is_upsampling = False):
         super().__init__()
-        self.up = nn.ConvTranspose3d(in_channels, in_channels // 2, kernel_size=2, stride=2)
-        self.conv = DoubleConv(in_channels, out_channels)
+        
+        if is_upsampling:
+            self.up = nn.Upsample(scale_factor=(2,2,2), mode='trilinear', align_corners=True)
+            self.conv = DoubleConv(in_channels, out_channels, mid_channels=in_channels // 2)
+        else:
+            self.up = nn.ConvTranspose3d(in_channels, in_channels // 2, kernel_size=2, stride=2)
+            self.conv = DoubleConv(in_channels, out_channels)
 
     def forward(self, x1, x2):
         x1 = self.up(x1)
