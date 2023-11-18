@@ -29,7 +29,6 @@ class UNet3D(nn.Module):
         self.up1 = Up(self.channels[4], self.channels[3], is_upsampling)
         self.up2 = Up(self.channels[3], self.channels[2], is_upsampling)
         self.up3 = Up(self.channels[2], self.channels[1], is_upsampling)
-        self.up4 = Up(self.channels[1], self.channels[0], is_upsampling)
         
         if is_upsampling:
             self.down4 = Down(self.channels[3], self.channels[4] // 2, conv_type=self.convtype)
@@ -37,7 +36,8 @@ class UNet3D(nn.Module):
             self.up1 = Up(self.channels[4], self.channels[3] // 2, is_upsampling)
             self.up2 = Up(self.channels[3], self.channels[2] // 2, is_upsampling)
             self.up3 = Up(self.channels[2], self.channels[1] // 2, is_upsampling)
-            self.up4 = Up(self.channels[1], self.channels[0] // 2, is_upsampling)
+
+        self.up4 = Up(self.channels[1], self.channels[0], is_upsampling)
         
         self.outc = OutConv(self.channels[0], n_classes)
          
@@ -109,7 +109,6 @@ class Up(nn.Module):
         if is_upsampling:
             self.up = nn.Upsample(scale_factor=(2,2,2), mode='trilinear', align_corners=True)
             self.conv = DoubleConv(in_channels, out_channels, mid_channels=in_channels // 2)
-            
 
     def forward(self, x1, x2):
         x1 = self.up(x1)
