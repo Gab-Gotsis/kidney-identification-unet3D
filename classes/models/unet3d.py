@@ -26,16 +26,11 @@ class UNet3D(nn.Module):
         self.down3 = Down(self.channels[2], self.channels[3], conv_type=self.convtype)
         self.down4 = Down(self.channels[3], self.channels[4], conv_type=self.convtype)
         
-        if (is_upsampling): 
-            self.up1 = Up(self.channels[4], self.channels[3] // 2, is_upsampling)
-            self.up2 = Up(self.channels[3], self.channels[2] // 2, is_upsampling)
-            self.up3 = Up(self.channels[2], self.channels[1] // 2, is_upsampling)
-            self.up4 = Up(self.channels[1], self.channels[0] // 2, is_upsampling)
-        else:
-            self.up1 = Up(self.channels[4], self.channels[3], trilinear)
-            self.up2 = Up(self.channels[3], self.channels[2], trilinear)
-            self.up3 = Up(self.channels[2], self.channels[1], trilinear)
-            self.up4 = Up(self.channels[1], self.channels[0], trilinear)
+        self.up1 = Up(self.channels[4], self.channels[3] // 2, is_upsampling)
+        self.up2 = Up(self.channels[3], self.channels[2] // 2, is_upsampling)
+        self.up3 = Up(self.channels[2], self.channels[1] // 2, is_upsampling)
+        self.up4 = Up(self.channels[1], self.channels[0] // 2, is_upsampling)
+
         
         self.outc = OutConv(self.channels[0], n_classes)
          
@@ -101,12 +96,13 @@ class Up(nn.Module):
     def __init__(self, in_channels, out_channels, is_upsampling = False):
         super().__init__()
         
+        self.up = nn.ConvTranspose3d(in_channels, in_channels // 2, kernel_size=2, stride=2)
+        self.conv = DoubleConv(in_channels, out_channels)
+        
         if is_upsampling:
             self.up = nn.Upsample(scale_factor=(2,2,2), mode='trilinear', align_corners=True)
             self.conv = DoubleConv(in_channels, out_channels, mid_channels=in_channels // 2)
-        else:
-            self.up = nn.ConvTranspose3d(in_channels, in_channels // 2, kernel_size=2, stride=2)
-            self.conv = DoubleConv(in_channels, out_channels)
+            
 
     def forward(self, x1, x2):
         x1 = self.up(x1)
