@@ -1,17 +1,24 @@
 import torch
 import torch.nn as nn
+import torch.nn.init as init
 import torch.nn.functional as F
 
 class UNet3D(nn.Module):
-    def __init__(self, n_channels, n_classes, width_multiplier=1):
+    def __init__(self, n_channels, n_classes, width_multiplier=1, channel_selection: int = 0, double_conv_kernel_size:int =3):
         super(UNet3D, self).__init__()
-        _channels = (4, 8, 16, 32, 64)
+        _channels = ()
+        if channel_selection == 0:
+            _channels = (4, 8, 16, 32, 64)
+        elif channel_selection == 1:
+            _channels = (8, 16, 32, 64, 128)
+        elif channel_selection == 2:
+            _channels = (16, 32, 64, 128, 256)
         self.n_channels = n_channels
         self.n_classes = n_classes
         self.channels = [int(c*width_multiplier) for c in _channels]
         self.convtype = nn.Conv3d
 
-        self.inc = DoubleConv(n_channels, self.channels[0], conv_type=self.convtype)
+        self.inc = DoubleConv(n_channels, self.channels[0], conv_type=self.convtype, kernel_size=double_conv_kernel_size)
         self.down1 = Down(self.channels[0], self.channels[1], conv_type=self.convtype)
         self.down2 = Down(self.channels[1], self.channels[2], conv_type=self.convtype)
         self.down3 = Down(self.channels[2], self.channels[3], conv_type=self.convtype)
@@ -35,16 +42,32 @@ class UNet3D(nn.Module):
         logits = self.outc(x)
         return logits
     
+    def _initialize_weights(self):
+        for m in self.modules():
+            if isinstance(m, nn.Conv3d):
+                init.kaiming_normal_(m.weight, mode='fan_out', nonlinearity='relu')
+                if m.bias is not None:
+                    init.constant_(m.bias, 0)
+            elif isinstance(m, nn.BatchNorm3d):
+                init.constant_(m.weight, 1)
+                init.constant_(m.bias, 0)
+            elif isinstance(m, nn.Linear):
+                init.normal_(m.weight, 0, 0.01)
+                init.constant_(m.bias, 0)
+    
 class DoubleConv(nn.Module):
-    def __init__(self, in_channels, out_channels, conv_type=nn.Conv3d, mid_channels=None):
+    def __init__(self, in_channels, out_channels, conv_type=nn.Conv3d, mid_channels=None, kernel_size: int=3):
         super().__init__()
+        padding = 1
+        if kernel_size == 5:
+            padding = 2
         if not mid_channels:
             mid_channels = out_channels
         self.double_conv = nn.Sequential(
-            conv_type(in_channels, mid_channels, kernel_size=3, padding=1),
+            conv_type(in_channels, mid_channels, kernel_size=kernel_size, padding=padding),
             nn.BatchNorm3d(mid_channels),
             nn.ReLU(inplace=True),
-            conv_type(mid_channels, out_channels, kernel_size=3, padding=1),
+            conv_type(mid_channels, out_channels, kernel_size=kernel_size, padding=padding),
             nn.BatchNorm3d(out_channels),
             nn.ReLU(inplace=True)
         )
