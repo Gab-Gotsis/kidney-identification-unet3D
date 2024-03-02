@@ -1,23 +1,10 @@
-# COMP9444_keen_beans
-
 Project Report
-https://docs.google.com/document/d/1YHhVStM9Fy6NThUfGkWJQmnP8DKJ-oFesjtKVkwK-2o/edit?usp=sharing
-
-## TEAM MEMBER
-| Name | Uni Email Address (zid) |
-| ----------- | ----------- |
-| Chin Chai | z3405715@unsw.edu.au |
-| Hanyang Xu | z5254111@unsw.edu.au |
-| Toran Shahi | z5342008@unsw.edu.au |
-| Ji Hye Kim  | z5422963@unsw.edu.au |
-| Gabriel Gotsis | z5362640@unsw.edu.au |
+https://docs.google.com/document/d/1oDV-W7yBMIhgaqe-iXN-KBF3heKEpGHTX5FhsdnkhpE/edit?usp=sharing
 
 # Kits-23 Challenge
 The topic that has been selected is https://kits-challenge.org 
 
 # Folder Structure
-At Google Colab, the base_dir is set to "/content/drive/MyDrive/Colab Notebooks/" for following file. This can be changed at notebook. Due to computational requirement, works are mainly done in Google Colab.
-
 ```
 ./dataset
 ./dataset/affine_transformed

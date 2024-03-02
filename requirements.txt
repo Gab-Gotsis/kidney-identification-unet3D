@@ -6,4 +6,4 @@ nibabel
 nilearn
 matplotlib
 tqdm
-onnx
+onnx 
